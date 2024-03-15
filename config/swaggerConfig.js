@@ -14,6 +14,34 @@ const options = {
         description: 'Local Development Server',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+      schemas: {
+        ErrorResponse: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'string',
+              description: 'The status of the response',
+            },
+            statusCode: {
+              type: 'integer',
+              description: 'The HTTP status code of the response',
+            },
+            message: {
+              type: 'string',
+              description: 'The error message',
+            },
+          },
+        },
+      },
+    },
   },
   // Path to the API docs
   apis: ['./routes/*.js'], // Adjust the path according to your project structure
