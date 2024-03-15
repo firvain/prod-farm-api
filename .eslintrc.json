@@ -1,0 +1,35 @@
+{
+  "root": true,
+  // Make sure eslint picks up the config at the root of the directory
+  "env": {
+    "node": true,
+    "commonjs": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "prettier"
+  ],
+  "plugins": [
+    "node",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "node/no-unsupported-features/es-syntax": [
+      "error",
+      {
+        "ignores": [
+          "modules"
+        ]
+      }
+    ]
+  },
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "ignorePatterns": [
+    "node_modules/"
+  ]
+}
