@@ -11,6 +11,7 @@ const createUser = async ({ email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   // check if user exits
   const existing = await User.findOne({ where: { email } });
+
   if (existing) {
     throw new Error('User already exits');
   }
@@ -56,64 +57,58 @@ const loginUser = async ({ email, password }) => {
 const forgotPassword = async ({ email }) => {
   // Find user by email
   const user = await User.findOne({ where: { email } });
+
   if (!user) {
+    console.log('User not found');
     throw new Error('User not found');
   }
 
   // Generate a reset token
   const resetPasswordToken = crypto.randomBytes(20).toString('hex');
-
-  // Hash the token and set to resetPasswordToken field
-  user.resetPasswordToken = await bcrypt.hash(resetPasswordToken, 10);
-
+  console.log('resetPasswordToken', resetPasswordToken);
+  user.resetPasswordToken = resetPasswordToken;
   // Set expiration (1 hour)
   user.resetPasswordExpire = Date.now() + 3600000; // 1 hour in milliseconds
 
   await user.save();
 
   // Create reset URL
-  const resetUrl = `http://localhost:3000/reset-password/?resetToken=${resetPasswordToken}`;
+  const resetUrl = `http://localhost:3000/users/reset-password/?resetToken=${resetPasswordToken}`;
 
   // Send email
   const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please click on the following link to reset your password: \n\n ${resetUrl}`;
 
   try {
-    await sendEmail({
-      from: 'tsipis.evangelos@gmail.com',
-      to: user.email,
+    const response = await sendEmail({
+      from: 'onboarding@resend.dev',
+      to: 'tsipis.evangelos@gmail.com',
       subject: 'Password reset token',
-      message,
+      text: message,
     });
-    return 'Email sent';
+    if (response.error) {
+      //response.error is not an instance of Error
+      throw new Error(response.error.message);
+    }
+    return response;
   } catch (error) {
-    console.log(error);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
     await user.save();
-    throw new Error('Email could not be sent');
+    throw error;
   }
 };
 
-const resetPassword = async (resetToken, password) => {
-  // Get hashed token
-  const resetPasswordToken = crypto
-    .createHash('sha256')
-    .update(resetToken)
-    .digest('hex');
-
+const resetPassword = async (resetToken, newPassword) => {
   const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpire: { $gt: Date.now() },
+    where: { resetPasswordToken: resetToken },
   });
-
-  if (!user) {
-    throw new Error('Invalid token');
-  }
+  console.log('user', user);
 
   // Set new password
-  user.password = password;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpire = undefined;
+  user.password = await bcrypt.hash('pasok', 10);
+  user.resetPasswordToken = null;
+  user.resetPasswordExpire = null;
+
   await user.save();
   return user;
 };

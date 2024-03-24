@@ -21,6 +21,10 @@ const User = db.define(
     resetPasswordToken: {
       type: DataTypes.STRING,
     },
+    resetPasswordExpire: {
+      type: DataTypes.DATE,
+    },
+
     // Additional attributes as needed
   },
   {

@@ -44,6 +44,9 @@ exports.forgotPassword = async (req, res, next) => {
         'Forgot password request processed. Instructions sent if email exists.',
     });
   } catch (error) {
+    if (error.statusCode === 400) {
+      next(new BadRequestError(error.message));
+    }
     next(new InternalServerError(error.message));
   }
 };
@@ -51,7 +54,8 @@ exports.forgotPassword = async (req, res, next) => {
 // Reset password
 exports.resetPassword = async (req, res, next) => {
   try {
-    await userService.resetPassword(req.body);
+    const { resetToken, newPassword } = req.query;
+    await userService.resetPassword(resetToken, newPassword);
     res.status(StatusCodes.OK).json({ message: 'Password reset successfully' });
   } catch (error) {
     next(new BadRequestError(error.message));

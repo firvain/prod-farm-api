@@ -1,13 +1,12 @@
 const { Resend } = require('resend');
 
-const resend = new Resend({
-  apiKey: process.env.RESSEND_API_KEY,
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 const sendEmail = async (options) => {
   try {
-    await resend.emails.send(options);
-  } catch (error) {
-    console.error(error);
+    return await resend.emails.send(options);
+  } catch ({ error }) {
+    throw new Error(error.message);
   }
 };
 

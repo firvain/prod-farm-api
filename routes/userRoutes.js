@@ -169,7 +169,7 @@ router.post('/forgot-password', limiter, userController.forgotPassword);
 /**
  * @swagger
  * /reset-password:
- *  post:
+ *  get:
  *    summary: Reset a user's password
  *    description: This endpoint is used when a user wants to reset their password. The user must be authenticated and provide a new password.
  *    requestBody:
@@ -200,6 +200,6 @@ router.post('/forgot-password', limiter, userController.forgotPassword);
  *            schema:
  *              $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/reset-password', authenticateJWT, userController.resetPassword);
+router.get('/reset-password', userController.resetPassword);
 
 module.exports = router;
