@@ -6,6 +6,7 @@ const { sign } = require('jsonwebtoken');
 const { info } = require('winston');
 const crypto = require('crypto');
 const sendEmail = require('../utils/Emailer');
+const fs = require('fs');
 
 const createUser = async ({ email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -23,13 +24,17 @@ const createUser = async ({ email, password }) => {
     role: user.role,
     iat: Math.floor(Date.now() / 1000), // The "iat" (issued at) claim identifies the time at which the JWT was issued
   };
-
-  return sign(payload, process.env.JWT_SECRET, {
+  const key = fs.readFileSync('./jwtRS256.key', 'utf8');
+  return sign(payload, key, {
+    algorithm: 'RS256',
     expiresIn: '1h', // Token expires in 1 hour
   });
 };
 
 const loginUser = async ({ email, password }) => {
+  if (!email || !password) {
+    throw new AuthenticationError('Email and password are required');
+  }
   const user = await User.findOne({
     where: { email: email },
   });
@@ -50,22 +55,25 @@ const loginUser = async ({ email, password }) => {
     role: user.role,
     iat: Math.floor(Date.now() / 1000), // The "iat" (issued at) claim identifies the time at which the JWT was issued
   };
-  return sign(payload, process.env.JWT_SECRET, {
+  const key = fs.readFileSync('./jwtRS256.key', 'utf8');
+  return sign(payload, key, {
+    algorithm: 'RS256',
     expiresIn: '1h', // Token expires in 1 hour
   });
 };
 const forgotPassword = async ({ email }) => {
+  if (!email) {
+    throw new AuthenticationError('Email is required');
+  }
   // Find user by email
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
-    console.log('User not found');
-    throw new Error('User not found');
+    throw new NotFoundError(`${email} not found`);
   }
 
   // Generate a reset token
   const resetPasswordToken = crypto.randomBytes(20).toString('hex');
-  console.log('resetPasswordToken', resetPasswordToken);
   user.resetPasswordToken = resetPasswordToken;
   // Set expiration (1 hour)
   user.resetPasswordExpire = Date.now() + 3600000; // 1 hour in milliseconds
@@ -86,7 +94,8 @@ const forgotPassword = async ({ email }) => {
       text: message,
     });
     if (response.error) {
-      //response.error is not an instance of Error
+      //response.error is not an instance of Error, so we can't throw it directly
+      // eslint-disable-next-line no-throw-literal
       throw new Error(response.error.message);
     }
     return response;
@@ -99,10 +108,12 @@ const forgotPassword = async ({ email }) => {
 };
 
 const resetPassword = async (resetToken, newPassword) => {
+  if (!resetToken || !newPassword) {
+    throw new AuthenticationError('Reset token and new password are required');
+  }
   const user = await User.findOne({
     where: { resetPasswordToken: resetToken },
   });
-  console.log('user', user);
 
   // Set new password
   user.password = await bcrypt.hash('pasok', 10);
