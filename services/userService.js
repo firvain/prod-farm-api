@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const sendEmail = require('../utils/Emailer');
 const fs = require('fs');
 
-const createUser = async ({ email, password }) => {
+const createUser = async ({ email, password, firstName, lastName }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   // check if user exits
   const existing = await User.findOne({ where: { email } });
@@ -16,11 +16,18 @@ const createUser = async ({ email, password }) => {
   if (existing) {
     throw new Error('User already exits');
   }
-  const user = await User.create({ email, password: hashedPassword });
+  const user = await User.create({
+    email,
+    password: hashedPassword,
+    first_name: firstName,
+    last_name: lastName,
+  });
   info('User created', user);
   const payload = {
     sub: user.id, // The "sub" (subject) claim identifies the principal that is the subject of the JWT
     email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
     role: user.role,
     iat: Math.floor(Date.now() / 1000), // The "iat" (issued at) claim identifies the time at which the JWT was issued
   };
@@ -52,6 +59,8 @@ const loginUser = async ({ email, password }) => {
   const payload = {
     sub: user.id, // The "sub" (subject) claim identifies the principal that is the subject of the JWT
     email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
     role: user.role,
     iat: Math.floor(Date.now() / 1000), // The "iat" (issued at) claim identifies the time at which the JWT was issued
   };
