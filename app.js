@@ -9,6 +9,7 @@ const swaggerSpec = require('./config/swaggerConfig');
 // Routes
 const userRoutes = require('./routes/userRoutes');
 const healthRoutes = require('./routes/healtRoutes');
+const profitCalculationRoutes = require('./routes/profitCalculationRoutes');
 // Middleware
 const errorHandler = require('./middleware/errorHandler');
 
@@ -30,6 +31,7 @@ app.use(passport.initialize());
 // Modular routes
 app.use('/health', healthRoutes);
 app.use('/users', userRoutes);
+app.use('/profit-calculation', profitCalculationRoutes);
 
 // Handling Undefined Routes
 const NotFoundError = require('./utils/NotFoundError');

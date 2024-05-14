@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
-const authenticateJWT = require('../middleware/authenticateJWT');
 const limiter = require('../middleware/rateLimiter');
 
 // Sign up a new user
@@ -9,6 +8,8 @@ const limiter = require('../middleware/rateLimiter');
  * @swagger
  * /signup:
  *  post:
+ *    tags:
+ *      - users
  *    summary: Sign up a new user
  *    description: Sign up a new user
  *    requestBody:
@@ -24,6 +25,12 @@ const limiter = require('../middleware/rateLimiter');
  *              password:
  *                type: string
  *                description: The user's password
+ *              firstName:
+ *                type: string
+ *                description: The user's first name
+ *              lastName:
+ *                type: string
+ *              description: The user's last name
  *    responses:
  *      200:
  *        description: The user was successfully created
@@ -61,6 +68,8 @@ router.post('/signup', limiter, userController.signUp);
  * @swagger
  * /login:
  *  post:
+ *    tags:
+ *      - users
  *    summary: Log in an existing user
  *    description: Log in an existing user
  *    requestBody:
@@ -112,6 +121,8 @@ router.post('/login', limiter, userController.login);
  * @swagger
  * /logout:
  *  post:
+ *    tags:
+ *      - users
  *    summary: Log out a user
  *    description: Log out a user. This endpoint is used to invalidate the user's session, effectively logging them out.
  *    responses:
@@ -139,6 +150,8 @@ router.post('/logout', userController.logout);
  * @swagger
  * /forgot-password:
  *  post:
+ *    tags:
+ *      - users
  *    summary: Request a password reset
  *    description: This endpoint is used when a user has forgotten their password and needs to request a password reset. An email will be sent to the user with instructions on how to reset their password.
  *    requestBody:
@@ -170,6 +183,8 @@ router.post('/forgot-password', limiter, userController.forgotPassword);
  * @swagger
  * /reset-password:
  *  get:
+ *    tags:
+ *      - user
  *    summary: Reset a user's password
  *    description: This endpoint is used when a user wants to reset their password. The user must be authenticated and provide a new password.
  *    requestBody:
