@@ -16,6 +16,7 @@ const createUser = async ({ email, password, firstName, lastName }) => {
   if (existing) {
     throw new Error('User already exits');
   }
+  console.log(email, hashedPassword, firstName, lastName);
   const user = await User.create({
     email,
     password: hashedPassword,
@@ -34,7 +35,7 @@ const createUser = async ({ email, password, firstName, lastName }) => {
   const key = fs.readFileSync('./jwtRS256.key', 'utf8');
   return sign(payload, key, {
     algorithm: 'RS256',
-    expiresIn: '1h', // Token expires in 1 hour
+    expiresIn: '7d', // Token expires in 1 hour
   });
 };
 

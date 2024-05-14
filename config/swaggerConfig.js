@@ -40,6 +40,145 @@ const options = {
             },
           },
         },
+        ProfitCalculation: {
+          type: 'object',
+          properties: {
+            id: {
+              type: 'integer',
+              description: 'The ID of the profit calculation',
+            },
+            user_id: {
+              type: 'integer',
+              description: 'The ID of the user',
+            },
+            animals: {
+              type: 'integer',
+              description: 'The number of animals',
+            },
+            milk: {
+              type: 'number',
+              format: 'double',
+              description: 'Milk production',
+            },
+            conc_milk: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate fed to milked animals',
+            },
+            conc_nonmilk: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate fed to non milked animals',
+            },
+            conc_males: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate fed to males',
+            },
+            conc_lambs: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate fed to lambs/kids',
+            },
+            hay: {
+              type: 'number',
+              format: 'double',
+              description: 'Hay fed to animals',
+            },
+            straw: {
+              type: 'number',
+              format: 'double',
+              description: 'Straw fed to animals',
+            },
+            silage: {
+              type: 'number',
+              format: 'double',
+              description: 'Silage fed to animals',
+            },
+            other: {
+              type: 'number',
+              format: 'double',
+              description: 'Other feed stuff fed to animals',
+            },
+            milk_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Milk price',
+            },
+            conc_milk_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate for milked animals price',
+            },
+            conc_nonmilk_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate for non milked animals price',
+            },
+            conc_males_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate for males price',
+            },
+            conc_lambs_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Concentrate for lambs/kids price',
+            },
+            hay_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Hay price',
+            },
+            straw_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Straw price',
+            },
+            silage_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Silage price',
+            },
+            other_price: {
+              type: 'number',
+              format: 'double',
+              description: 'Other feed stuff price',
+            },
+            milk_income: {
+              type: 'number',
+              format: 'double',
+              description: 'Income from milk',
+            },
+            feed_costs: {
+              type: 'number',
+              format: 'double',
+              description: 'Total feed costs',
+            },
+            profit: {
+              type: 'number',
+              format: 'double',
+              description: 'Profit',
+            },
+            profit_animal: {
+              type: 'number',
+              format: 'double',
+              description: 'Profit per animal',
+            },
+            created_at: {
+              type: 'string',
+              format: 'date-time',
+              description:
+                'The date and time when the profit calculation was created',
+            },
+            updated_at: {
+              type: 'string',
+              format: 'date-time',
+              description:
+                'The date and time when the profit calculation was last updated',
+            },
+          },
+        },
       },
     },
   },
