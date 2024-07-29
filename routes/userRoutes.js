@@ -217,4 +217,65 @@ router.post('/forgot-password', limiter, userController.forgotPassword);
  */
 router.get('/reset-password', userController.resetPassword);
 
+// get all users
+/**
+ * @swagger
+ * /users:
+ *  get:
+ *    tags:
+ *      - users
+ *    summary: Get all users
+ *    description: Get all users
+ *    responses:
+ *      200:
+ *        description: The users were successfully retrieved
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *      500:
+ *        description: There was a problem with the request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ErrorResponse'
+ */
+router.get('/', userController.getAllUsers);
+
+// delete a user
+/**
+ * @swagger
+ * /users/{id}:
+ *  delete:
+ *    tags:
+ *      - users
+ *    summary: Delete a user
+ *    description: Delete a user
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        description: The user ID
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: The user was successfully deleted
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: A message indicating the user was successfully deleted
+ *      500:
+ *        description: There was a problem with the request
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/ErrorResponse'
+ */
+router.delete('/:id', userController.deleteUser);
+
 module.exports = router;

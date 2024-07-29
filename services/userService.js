@@ -68,7 +68,7 @@ const loginUser = async ({ email, password }) => {
   const key = fs.readFileSync('./jwtRS256.key', 'utf8');
   return sign(payload, key, {
     algorithm: 'RS256',
-    expiresIn: '1h', // Token expires in 1 hour
+    expiresIn: '7d', // Token expires in 7 days
   });
 };
 const forgotPassword = async ({ email }) => {
@@ -133,10 +133,29 @@ const resetPassword = async (resetToken, newPassword) => {
   await user.save();
   return user;
 };
+const getAllUsers = async () => {
+  return await User.findAll({
+    where: { role: 'user' },
+    attributes: {
+      exclude: [
+        'password',
+        'resetPasswordToken',
+        'resetPasswordExpire',
+        'role',
+      ],
+    },
+  });
+};
+const deleteUser = async (id) => {
+  return await User.destroy({ where: { id } });
+};
+
 module.exports = {
   createUser,
   loginUser,
   forgotPassword,
   resetPassword,
+  getAllUsers,
+  deleteUser,
   // Export other functions
 };

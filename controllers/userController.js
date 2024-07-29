@@ -1,3 +1,4 @@
+// Description: This file contains the logic for user related operations.
 const { StatusCodes } = require('http-status-codes');
 const userService = require('../services/userService');
 const ApiError = require('../utils/ApiError');
@@ -59,5 +60,23 @@ exports.resetPassword = async (req, res, next) => {
     res.status(StatusCodes.OK).json({ message: 'Password reset successfully' });
   } catch (error) {
     next(new BadRequestError(error.message));
+  }
+};
+
+exports.getAllUsers = async (req, res, next) => {
+  try {
+    const users = await userService.getAllUsers();
+    res.status(StatusCodes.OK).json(users);
+  } catch (error) {
+    next(new InternalServerError(error.message));
+  }
+};
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    await userService.deleteUser(req.params.id);
+    res.status(StatusCodes.OK).json({ message: 'User deleted successfully' });
+  } catch (error) {
+    next(new InternalServerError(error.message));
   }
 };
