@@ -16,7 +16,18 @@ const errorHandler = require('./middleware/errorHandler');
 const app = express();
 
 // Middlewares
-app.use(cors());
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://api.proudfarmincubator.gr',
+    'https://api.proudfarmincubator.gr',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
