@@ -19,6 +19,7 @@ const app = express();
 const corsOptions = {
   origin: [
     'http://localhost:3000',
+    'http://localhost:9000',
     'http://api.proudfarmincubator.gr',
     'https://api.proudfarmincubator.gr',
   ],
@@ -28,6 +29,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle preflight requests
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
