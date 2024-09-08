@@ -68,6 +68,7 @@ exports.getAllUsers = async (req, res, next) => {
     const users = await userService.getAllUsers();
     res.status(StatusCodes.OK).json(users);
   } catch (error) {
+    console.log('error', error);
     next(new InternalServerError(error.message));
   }
 };
@@ -78,5 +79,18 @@ exports.deleteUser = async (req, res, next) => {
     res.status(StatusCodes.OK).json({ message: 'User deleted successfully' });
   } catch (error) {
     next(new InternalServerError(error.message));
+  }
+};
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    const user = await userService.updateUser(req.params.id, req.body);
+    res.status(StatusCodes.OK).json(user);
+  } catch (error) {
+    if (error.name === 'SequelizeUniqueConstraintError') {
+      return next(new ConflictError('Email already exists'));
+    } else {
+      return next(new InternalServerError(error.message));
+    }
   }
 };

@@ -99,7 +99,7 @@ const forgotPassword = async ({ email }) => {
   try {
     const response = await sendEmail({
       from: 'onboarding@resend.dev',
-      to: 'tsipis.evangelos@gmail.com',
+      to: email,
       subject: 'Password reset token',
       text: message,
     });
@@ -149,7 +149,16 @@ const getAllUsers = async () => {
 const deleteUser = async (id) => {
   return await User.destroy({ where: { id } });
 };
-
+const updateUser = async (id, data) => {
+  return await User.update(
+    {
+      first_name: data.first_name,
+      last_name: data.last_name,
+      email: data.email,
+    },
+    { where: { id: id } }
+  );
+};
 module.exports = {
   createUser,
   loginUser,
@@ -157,5 +166,6 @@ module.exports = {
   resetPassword,
   getAllUsers,
   deleteUser,
+  updateUser,
   // Export other functions
 };
