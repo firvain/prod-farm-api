@@ -22,6 +22,8 @@ const corsOptions = {
     'http://localhost:9000',
     'http://api.proudfarmincubator.gr',
     'https://api.proudfarmincubator.gr',
+    'https://profit.proudfarmincubator.gr', // Non-www version of the Quasar app
+    'https://www.profit.proudfarmincubator.gr', // www version of the Quasar app
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
